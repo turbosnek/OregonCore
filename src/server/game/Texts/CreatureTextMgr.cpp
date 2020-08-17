@@ -512,7 +512,8 @@ std::string CreatureTextMgr::GetLocalizedChatString(uint32 entry, uint8 gender, 
         return "";
 
     std::string baseText = groupItr->text;
-
+	if (loc_idx == 0)
+		loc_idx = 8; //In this place loc_idx for ruRU locale must be equal 8, not 0
     LocaleCreatureTextMap::const_iterator locItr = mLocaleTextMap.find(CreatureTextId(entry, uint32(textGroup), id));
     if (locItr != mLocaleTextMap.end())
         ObjectMgr::GetLocaleString(locItr->second.Text, loc_idx, baseText);

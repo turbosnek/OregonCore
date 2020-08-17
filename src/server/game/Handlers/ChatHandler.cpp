@@ -702,7 +702,8 @@ void WorldSession::HandleTextEmoteOpcode(WorldPacket& recv_data)
     Unit* unit = ObjectAccessor::GetUnit(*_player, guid);
     if (unit)
     {
-        nam = unit->GetName();
+        int loc_idx = GetSessionDbLocaleIndex();
+		nam = unit->GetNameForLocaleIdx(loc_idx); //Use creature name from locales_creature when using text emote on NPC 
         namlen = (nam ? strlen(nam) : 0) + 1;
     }
 
