@@ -80,7 +80,7 @@ void CreatureTextMgr::LoadCreatureTexts()
     mTextMap.clear(); // for reload case
     //all currently used temp texts are NOT reset
                                                       
-    QueryResult* result = WorldDatabase.Query("SELECT CreatureID, GroupID, ID, Text, Type, Language, Probability, Emote, Duration, Sound, TextRange FROM creature_text");
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT CreatureID, GroupID, ID, Text, Type, Language, Probability, Emote, Duration, Sound, TextRange FROM creature_text");
 
     if (!result)
     {
@@ -160,7 +160,7 @@ void CreatureTextMgr::LoadCreatureTextLocales()
 
     mLocaleTextMap.clear(); // for reload case
 
-    QueryResult* result = WorldDatabase.Query("SELECT CreatureID, GroupID, ID, Locale, Text FROM creature_text_locale");
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT CreatureID, GroupID, ID, Locale, Text FROM creature_text_locale");
 
     if (!result)
         return;

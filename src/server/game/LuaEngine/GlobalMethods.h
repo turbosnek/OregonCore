@@ -8,7 +8,6 @@
 #define GLOBALMETHODS_H
 
 #include "BindingMap.h"
-#include "Database/DatabaseEnv.h"
 
 /***
  * These functions can be used anywhere at any time, including at start-up.
@@ -1195,12 +1194,8 @@ namespace LuaGlobalFunctions
             return 1;
         }
 
-#ifdef DO_POSTGRESQL 
-        DatabasePostgre* queryResult = new DatabasePostgre(result, fields, rowCount, fieldCount);
-#else
-        QueryResultMysql* queryResult = new QueryResultMysql(result, fields, rowCount, fieldCount);
-#endif
-       
+        QueryResult* queryResult = new QueryResult(result, fields, rowCount, fieldCount);
+
         queryResult->NextRow();
 
         if (queryResult)
@@ -1252,11 +1247,7 @@ namespace LuaGlobalFunctions
             return 1;
         }
 
-#ifdef DO_POSTGRESQL 
-        DatabasePostgre* queryResult = new DatabasePostgre(result, fields, rowCount, fieldCount);
-#else
-        QueryResultMysql* queryResult = new QueryResultMysql(result, fields, rowCount, fieldCount);
-#endif
+        QueryResult* queryResult = new QueryResult(result, fields, rowCount, fieldCount);
 
         queryResult->NextRow();
 
@@ -1309,11 +1300,7 @@ namespace LuaGlobalFunctions
             return 1;
         }
 
-#ifdef DO_POSTGRESQL 
-        DatabasePostgre* queryResult = new DatabasePostgre(result, fields, rowCount, fieldCount);
-#else
-        QueryResultMysql* queryResult = new QueryResultMysql(result, fields, rowCount, fieldCount);
-#endif
+        QueryResult* queryResult = new QueryResult(result, fields, rowCount, fieldCount);
 
         queryResult->NextRow();
 

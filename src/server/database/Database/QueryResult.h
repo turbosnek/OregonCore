@@ -1,97 +1,123 @@
 /*
- * Copyright (C) 2005-2011 MaNGOS <http://getmangos.com/>
- * Copyright (C) 2009-2011 MaNGOSZero <https://github.com/mangos/zero>
- * Copyright (C) 2011-2016 Nostalrius <https://nostalrius.org>
- * Copyright (C) 2016-2017 Elysium Project <https://github.com/elysium-project>
+ * This file is part of the OregonCore Project. See AUTHORS file for Copyright information
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef QUERYRESULT_H
 #define QUERYRESULT_H
 
-#include "Common.h"
-#include "Errors.h"
+#include <ace/Refcounted_Auto_Ptr.h>
+#include <ace/Null_Mutex.h>
+#include <stdexcept>
+
 #include "Field.h"
+#include "Utilities/UnorderedMap.h"
+
+#ifdef WIN32
+#include <winsock2.h>
+#endif
 #include <mysql.h>
 
 class QueryResult
 {
     public:
-        QueryResult(uint64 rowCount, uint32 fieldCount)
-            : mCurrentRow(nullptr), mFieldCount(fieldCount), mRowCount(rowCount) {}
+        QueryResult(MYSQL_RES* result, MYSQL_FIELD* fields, uint64 rowCount, uint32 fieldCount);
+        ~QueryResult();
 
-        virtual ~QueryResult() {}
-
-        virtual bool NextRow() = 0;
+        bool NextRow();
 
         Field* Fetch() const { return mCurrentRow; }
-
         Field const& operator [] (int index) const { return mCurrentRow[index]; }
+        Field const& operator [] (const char* name) const { return mCurrentRow[GetField_idx(name)]; }
 
         uint32 GetFieldCount() const { return mFieldCount; }
         uint64 GetRowCount() const { return mRowCount; }
 
+        size_t GetField_idx(const char* name) const
+        {
+            for (size_t i = 0; i < mFieldCount; ++i)
+                if (!strcmp(name, mFields[i].name))
+                    return i;
+
+            std::string err = "No column named ";
+            err += name;
+            err += "in field list!";
+            throw std::invalid_argument(err);
+        }
         const char* GetFieldName(size_t i)
         {
             if (i < mFieldCount)
                 return mFields[i].name;
 
             return "No column named";
-        };
+        }
 
     protected:
         Field* mCurrentRow;
         uint32 mFieldCount;
         uint64 mRowCount;
         MYSQL_FIELD* mFields;
+    
+    private:
+        void EndQuery();
+        
+        MYSQL_RES* mResult;
 };
 
-typedef std::vector<std::string> QueryFieldNames;
-
-class QueryNamedResult
+class PreparedQueryResult
 {
     public:
-        explicit QueryNamedResult(QueryResult* query, QueryFieldNames const& names) : mQuery(query), mFieldNames(names) {}
-        ~QueryNamedResult() { delete mQuery; }
+        PreparedQueryResult(MYSQL_STMT* stmt);
+        ~PreparedQueryResult();
 
-        // compatible interface with QueryResult
-        bool NextRow() { return mQuery->NextRow(); }
-        Field* Fetch() const { return mQuery->Fetch(); }
-        uint32 GetFieldCount() const { return mQuery->GetFieldCount(); }
-        uint64 GetRowCount() const { return mQuery->GetRowCount(); }
-        Field const& operator[] (int index) const { return (*mQuery)[index]; }
+        bool NextRow();
 
-        // named access
-        Field const& operator[] (std::string const& name) const { return mQuery->Fetch()[GetField_idx(name)]; }
-        QueryFieldNames const& GetFieldNames() const { return mFieldNames; }
+        Field* Fetch() const { return mCurrentRow; }
+        Field const& operator [] (int index) const { return mCurrentRow[index]; }
+        Field const& operator [] (const char* name) const { return mCurrentRow[GetField_idx(name)]; }
 
-        uint32 GetField_idx(std::string const& name) const
+        uint32 GetFieldCount() const { return mFieldCount; }
+        uint64 GetRowCount() const { return mRowCount; }
+
+        size_t GetField_idx(const char* name) const
         {
-            for(size_t idx = 0; idx < mFieldNames.size(); ++idx)
-            {
-                if(mFieldNames[idx] == name)
-                    return idx;
-            }
-            ASSERT(false && "unknown field name");
-            return uint32(-1);
+            for (size_t i = 0; i < mFieldCount; ++i)
+                if (!strcmp(name, mFields[i].name))
+                    return i;
+
+            std::string err = "No column named ";
+            err += name;
+            err += "in field list!";
+            throw std::invalid_argument(err);
         }
 
     protected:
-        QueryResult* mQuery;
-        QueryFieldNames mFieldNames;
+        Field* mCurrentRow;
+        uint32 mFieldCount;
+        uint64 mRowCount;
+        MYSQL_FIELD* mFields;
+    
+    private:
+        void EndQuery();
+
+        std::vector<Field*> mRows;
+        size_t mCursor;
+        MYSQL_RES* mMetaData;
 };
+
+typedef ACE_Refcounted_Auto_Ptr<QueryResult, ACE_Null_Mutex> QueryResult_AutoPtr;
+typedef ACE_Refcounted_Auto_Ptr<PreparedQueryResult, ACE_Null_Mutex> PreparedQueryResult_AutoPtr;
 
 #endif

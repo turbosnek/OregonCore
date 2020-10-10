@@ -111,7 +111,7 @@ bool ArenaTeam::AddMember(const uint64& playerGuid)
     else
     {
         //                                                            0     1
-        QueryResult* result = CharacterDatabase.PQuery("SELECT name, class FROM characters WHERE guid='%u'", GUID_LOPART(playerGuid));
+        QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT name, class FROM characters WHERE guid='%u'", GUID_LOPART(playerGuid));
         if (!result)
             return false;
 
@@ -157,7 +157,7 @@ bool ArenaTeam::AddMember(const uint64& playerGuid)
     return true;
 }
 
-bool ArenaTeam::LoadArenaTeamFromDB(QueryResult* arenaTeamDataResult)
+bool ArenaTeam::LoadArenaTeamFromDB(QueryResult_AutoPtr arenaTeamDataResult)
 {
     if (!arenaTeamDataResult)
         return false;
@@ -184,7 +184,7 @@ bool ArenaTeam::LoadArenaTeamFromDB(QueryResult* arenaTeamDataResult)
     return true;
 }
 
-bool ArenaTeam::LoadMembersFromDB(QueryResult* arenaTeamMembersResult)
+bool ArenaTeam::LoadMembersFromDB(QueryResult_AutoPtr arenaTeamMembersResult)
 {
     if (!arenaTeamMembersResult)
         return false;
