@@ -23,7 +23,6 @@
 #include <fstream>
 #include <stdarg.h>
 #include <stdio.h>
-#include "ace/OS.h"
 
 extern uint32 realmID;
 
@@ -528,7 +527,6 @@ void Log::WaitBeforeContinueIfNeed()
     for (int i = 0; i < mode; ++i)
     {
         ACE_OS::sleep(1);
-        
     }
 }
 
