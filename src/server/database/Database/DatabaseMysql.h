@@ -29,7 +29,6 @@
 #include "Policies/Singleton.h"
 #include "ace/Thread_Mutex.h"
 #include "ace/Guard_T.h"
-#include "ace/Singleton.h"
 
 #ifdef WIN32
 #include <winsock2.h>
@@ -84,8 +83,6 @@ class MySQLConnection : public SqlConnection
         MySQLConnection(Database& db) : SqlConnection(db), mMysql(nullptr) {}
         ~MySQLConnection() override;
 
-
-        bool ExecuteFile(char const* file);
         bool OpenConnection(bool reconnect) override;
         bool Reconnect();
         bool HandleMySQLError(uint32 errNo);
@@ -133,8 +130,6 @@ class DatabaseMysql : public Database
         static size_t db_count;
         MYSQL* mMysql;
 };
-
-#define sMySQLConnection Oregon::Singleton<MySQLConnection>::Instance()
 
 #endif
 #endif
