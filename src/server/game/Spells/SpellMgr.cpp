@@ -898,7 +898,6 @@ void SpellMgr::LoadSpellTargetPositions()
 
 
         sLog.outString(">> Loaded %u spell target coordinates", count);
-		sLog.outString();
         return;
     }
 
@@ -960,7 +959,6 @@ void SpellMgr::LoadSpellTargetPositions()
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u spell teleport coordinates", count);
-	sLog.outString();
 }
 
 void SpellMgr::LoadSpellAffects()
@@ -975,7 +973,6 @@ void SpellMgr::LoadSpellAffects()
     {
 
         sLog.outString(">> Loaded %u spell affect definitions", count);
-		sLog.outString();
         return;
     }
 
@@ -1031,7 +1028,6 @@ void SpellMgr::LoadSpellAffects()
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u spell affect definitions", count);
-	sLog.outString();
 
     for (uint32 id = 0; id < sSpellStore.GetNumRows(); ++id)
     {
@@ -1101,7 +1097,6 @@ void SpellMgr::LoadSpellProcEvents()
     if (!result)
     {
         sLog.outString(">> Loaded %u spell proc event conditions", count);
-		sLog.outString();
         return;
     }
 
@@ -1145,16 +1140,10 @@ void SpellMgr::LoadSpellProcEvents()
     }
     while (result->NextRow());
 
-	if (customProc)
-	{
-		sLog.outString(">> Loaded %u custom spell proc event conditions +%u custom", count, customProc);
-		sLog.outString();
-	}
-	else
-	{
-		sLog.outString(">> Loaded %u spell proc event conditions", count);
-		sLog.outString();
-	}
+    if (customProc)
+        sLog.outString(">> Loaded %u custom spell proc event conditions +%u custom",  count, customProc);
+    else
+        sLog.outString(">> Loaded %u spell proc event conditions", count);
 }
 
 
@@ -1433,7 +1422,6 @@ void SpellMgr::LoadSpellThreats()
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u SpellThreatEntries.", count);
-	sLog.outString();
 }
 
 void SpellMgr::LoadSpellEnchantProcData()
@@ -1447,7 +1435,6 @@ void SpellMgr::LoadSpellEnchantProcData()
     if (!result)
     {
         sLog.outString(">> Loaded %u spell enchant proc event conditions", count);
-		sLog.outString();
         return;
     }
 
@@ -1477,7 +1464,6 @@ void SpellMgr::LoadSpellEnchantProcData()
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u enchant proc data definitions", count);
-	sLog.outString();
 }
 
 void SpellMgr::LoadSpellDummyCondition()
@@ -1507,12 +1493,10 @@ void SpellMgr::LoadSpellDummyCondition()
         while (result->NextRow());
 
         sLog.outString(">> Loaded %llu spell dummy conditions", result->GetRowCount());
-		sLog.outString();
         return;
     }
 
     sLog.outString(">> Loaded 0 spell dummy conditions");
-	sLog.outString();
 }
 
 bool SpellMgr::IsRankSpellDueToSpell(SpellEntry const* spellInfo_1, uint32 spellId_2) const
@@ -1831,7 +1815,6 @@ void SpellMgr::LoadSpellRequired()
     {
         sLog.outString(">> Loaded 0 spell required records");
         sLog.outErrorDb("spell_required table is empty!");
-		sLog.outString();
         return;
     }
     uint32 rows = 0;
@@ -1850,7 +1833,6 @@ void SpellMgr::LoadSpellRequired()
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u spell required records", rows);
-	sLog.outString();
 }
 
 struct SpellRankEntry
@@ -2103,7 +2085,6 @@ void SpellMgr::LoadSpellChains()
     //       sLog.outString("Id: %u, Rank: %d , %s",itr->first,itr->second.rank, sSpellStore.LookupEntry(itr->first)->Rank[sWorld.GetDefaultDbcLocale()]);
 
     sLog.outString(">> Loaded %u spell chains", count);
-	sLog.outString();
 }
 
 void SpellMgr::LoadSpellLearnSkills()
@@ -2139,7 +2120,6 @@ void SpellMgr::LoadSpellLearnSkills()
     }
 
     sLog.outString(">> Loaded %u Spell Learn Skills from DBC", dbc_count);
-	sLog.outString();
 }
 
 void SpellMgr::LoadSpellLearnSpells()
@@ -2152,7 +2132,6 @@ void SpellMgr::LoadSpellLearnSpells()
 
         sLog.outString(">> Loaded 0 spell learn spells");
         sLog.outErrorDb("spell_learn_spell table is empty!");
-		sLog.outString();
         return;
     }
 
@@ -2228,7 +2207,6 @@ void SpellMgr::LoadSpellLearnSpells()
     }
 
     sLog.outString(">> Loaded %u spell learn spells + %u found in DBC", count, dbc_count);
-	sLog.outString();
 }
 
 void SpellMgr::LoadSpellPetAuras()
@@ -2242,7 +2220,6 @@ void SpellMgr::LoadSpellPetAuras()
     if (!result)
     {
         sLog.outString(">> Loaded %u spell pet auras", count);
-		sLog.outString();
         return;
     }
 
@@ -2295,7 +2272,6 @@ void SpellMgr::LoadSpellPetAuras()
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u spell pet auras", count);
-	sLog.outString();
 }
 
 // set data in core for now
@@ -2788,7 +2764,6 @@ void SpellMgr::LoadSpellCustomCooldowns()
     if (!result)
     {
         sLog.outString(">> Loaded %u custom spell cooldowns", count);
-		sLog.outString();
         return;
     }
 
@@ -2814,7 +2789,6 @@ void SpellMgr::LoadSpellCustomCooldowns()
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u custom spell cooldowns", count);
-	sLog.outString();
 }
 
 void SpellMgr::LoadSpellLinked()
@@ -2827,7 +2801,6 @@ void SpellMgr::LoadSpellLinked()
     if (!result)
     {
         sLog.outString(">> Loaded %u linked spells", count);
-		sLog.outString();
         return;
     }
 
@@ -2884,7 +2857,6 @@ void SpellMgr::LoadSpellLinked()
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u linked spells", count);
-	sLog.outString();
 }
 
 // Some checks for spells, to prevent adding depricated/broken spells for trainers, spell book, etc
@@ -3115,7 +3087,6 @@ void SpellMgr::LoadSkillLineAbilityMap()
     }
 
     sLog.outString(">> Loaded %u SkillLineAbility MultiMap", count);
-	sLog.outString();
 }
 
 DiminishingGroup GetDiminishingReturnsGroupForSpell(SpellEntry const* spellproto, bool triggered)

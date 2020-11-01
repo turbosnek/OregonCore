@@ -74,7 +74,7 @@ public:
                 }
             }
     
-            sLog.outDebug("OSCR: Instance Hellfire Ramparts: GetPlayerInMap, but PlayerList is empty!");
+            debug_log("OSCR: Instance Hellfire Ramparts: GetPlayerInMap, but PlayerList is empty!");
             return NULL;
         }
     

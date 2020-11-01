@@ -194,7 +194,7 @@ bool PostgreSQLConnection::_TransactionCmd(char const* sql)
     }
     else
     {
-        sLog.outDebug("SQL: %s", sql);
+        DEBUG_LOG("SQL: %s", sql);
     }
     return true;
 }

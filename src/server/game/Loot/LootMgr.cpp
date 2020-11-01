@@ -142,13 +142,9 @@ void LootStore::LoadLootTable()
         Verify();                                           // Checks validity of the loot store
 
         sLog.outString(">> Loaded " UI64FMTD " loot definitions (%lu templates)", count, m_LootTemplates.size());
-		sLog.outString();
     }
-	else
-	{
-		sLog.outErrorDb(">> Loaded 0 loot definitions. DB table %s is empty.", GetName());
-		sLog.outString();
-	}
+    else
+        sLog.outErrorDb(">> Loaded 0 loot definitions. DB table %s is empty.", GetName());
 }
 
 bool LootStore::HaveQuestLootFor(uint32 loot_id) const

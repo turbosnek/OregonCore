@@ -218,7 +218,7 @@ public:
                 {
                     if (FelCrystals.empty())
                     {
-                        sLog.outError("OSCR: Magisters Terrace: No Fel Crystals loaded in Inst Data");
+                        error_log("OSCR: Magisters Terrace: No Fel Crystals loaded in Inst Data");
                         return 0;
                     }
     

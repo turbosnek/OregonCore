@@ -139,7 +139,6 @@ void FormationMgr::LoadCreatureFormations()
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u creatures in formations", count);
-	sLog.outString();
 }
 
 void CreatureGroup::AddMember(Creature* member)

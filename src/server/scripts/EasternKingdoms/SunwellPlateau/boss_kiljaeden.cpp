@@ -812,7 +812,7 @@ public:
                             if (pRandomPlayer)
                                 DoCast(pRandomPlayer, SPELL_LEGION_LIGHTNING, false);
                             else
-                                sLog.outError("try to cast SPELL_LEGION_LIGHTNING on invalid target");
+                                error_log("try to cast SPELL_LEGION_LIGHTNING on invalid target");
 
                             Timer[TIMER_LEGION_LIGHTNING] = (Phase == PHASE_SACRIFICE) ? 18000 : 30000; // 18 seconds in PHASE_SACRIFICE
                             Timer[TIMER_SOUL_FLAY] = 2500;
@@ -1459,7 +1459,7 @@ public:
                 DoMeleeAttackIfReady();
                 break;
             }
-            sLog.outDebug("Sinister-Timer");
+            debug_log("Sinister-Timer");
             for (uint8 i = 0; i < 3; ++i)
                 uiTimer[i] -= diff;
         }

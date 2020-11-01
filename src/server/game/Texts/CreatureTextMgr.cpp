@@ -85,7 +85,6 @@ void CreatureTextMgr::LoadCreatureTexts()
     if (!result)
     {
         sLog.outString(">> Loaded 0 ceature texts. DB table `creature_text` is empty.");
-		sLog.outString();
 
         return;
     }
@@ -153,7 +152,6 @@ void CreatureTextMgr::LoadCreatureTexts()
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u creature texts for %lu creatures in %u ms", textCount, mTextMap.size(), GetMSTimeDiffToNow(oldMSTime));
-	sLog.outString();
 }
 
 void CreatureTextMgr::LoadCreatureTextLocales()
@@ -185,7 +183,6 @@ void CreatureTextMgr::LoadCreatureTextLocales()
     } while (result->NextRow());
 
     sLog.outString(">> Loaded %u creature localized texts in %u ms", int32(mLocaleTextMap.size()), GetMSTimeDiffToNow(oldMSTime));
-	sLog.outString();
 
 }
 

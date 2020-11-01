@@ -1745,7 +1745,7 @@ void Group::BroadcastGroupUpdate(void)
                 pet->ForceValuesUpdateAtIndex(UNIT_FIELD_FACTIONTEMPLATE);
             }
 
-            sLog.outDebug("-- Forced group value update for '%s'", pp->GetName());
+            DEBUG_LOG("-- Forced group value update for '%s'", pp->GetName());
         }
     }
 }

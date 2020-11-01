@@ -29,7 +29,6 @@
 #include "Configuration/Config.h"
 #include "Util.h"
 #include "CliRunnable.h"
-#include "Database/DatabaseEnv.h"
 //#include "Chat/AsyncCommandHandlers.h"
 
 #include <iterator>

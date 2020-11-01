@@ -156,16 +156,16 @@ struct DynamicTreeIntersectionCallback_WithLogger
     bool did_hit;
     DynamicTreeIntersectionCallback_WithLogger() : did_hit(false)
     {
-        sLog.outDebug("Dynamic Intersection log");
+        DEBUG_LOG("Dynamic Intersection log");
     }
     bool operator()(const Ray& r, const GameObjectModel& obj, float& distance)
     {
-        sLog.outDebug("testing intersection with %s", obj.name.c_str());
+        DEBUG_LOG("testing intersection with %s", obj.name.c_str());
         bool hit = obj.intersectRay(r, distance, true);
         if (hit)
         {
             did_hit = true;
-            sLog.outDebug("result: intersects");
+            DEBUG_LOG("result: intersects");
         }
         return hit;
     }

@@ -119,7 +119,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
 
 			sScriptMgr.OnPlayerChat(GetPlayer(), type, lang, msg);
 
-            sLog.out(LOG_CHAT, "[ADDON] Player %s sends: %s",
+            sLog.outChat("[ADDON] Player %s sends: %s",
                          GetPlayer()->GetName(), msg.c_str());
         }
 
@@ -348,7 +348,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
             group->BroadcastPacket(&data, false, group->GetMemberGroup(GetPlayer()->GetGUID()));
 
             if (sWorld.getConfig(CONFIG_CHATLOG_PARTY))
-                sLog.out(LOG_CHAT, "[PARTY] Player %s tells group with leader %s: %s",
+                sLog.outChat("[PARTY] Player %s tells group with leader %s: %s",
                              GetPlayer()->GetName(), group->GetLeaderName(), msg.c_str());
         }
         break;
@@ -374,12 +374,12 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
 
                 if (lang != LANG_ADDON && sWorld.getConfig(CONFIG_CHATLOG_GUILD))
                 {
-                    sLog.out(LOG_CHAT, "[GUILD] Player %s tells guild %s: %s",
+                    sLog.outChat("[GUILD] Player %s tells guild %s: %s",
                                  GetPlayer()->GetName(), guild->GetName().c_str(), msg.c_str());
                 }
                 else if (lang == LANG_ADDON && sWorld.getConfig(CONFIG_CHATLOG_ADDON))
                 {
-                    sLog.out(LOG_CHAT, "[ADDON] Player %s sends to guild %s: %s",
+                    sLog.outChat("[ADDON] Player %s sends to guild %s: %s",
                                  GetPlayer()->GetName(), guild->GetName().c_str(), msg.c_str());
                 }
             }
@@ -406,7 +406,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
                 }
 
                 if (sWorld.getConfig(CONFIG_CHATLOG_GUILD))
-                    sLog.out(LOG_CHAT, "[OFFICER] Player %s tells guild %s officers: %s",
+                    sLog.outChat("[OFFICER] Player %s tells guild %s officers: %s",
                                  GetPlayer()->GetName(), guild->GetName().c_str(), msg.c_str());
             }
         }
@@ -433,7 +433,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
             group->BroadcastPacket(&data, false);
 
             if (sWorld.getConfig(CONFIG_CHATLOG_RAID))
-                sLog.out(LOG_CHAT, "[RAID] Player %s tells raid with leader %s: %s",
+                sLog.outChat("[RAID] Player %s tells raid with leader %s: %s",
                              GetPlayer()->GetName(), group->GetLeaderName(), msg.c_str());
         }
         break;
@@ -459,7 +459,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
             group->BroadcastPacket(&data, false);
 
             if (sWorld.getConfig(CONFIG_CHATLOG_RAID))
-                sLog.out(LOG_CHAT, "[RAID] Leader player %s tells raid: %s",
+                sLog.outChat("[RAID] Leader player %s tells raid: %s",
                              GetPlayer()->GetName(), msg.c_str());
         }
         break;
@@ -484,7 +484,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
             group->BroadcastPacket(&data, false);
 
             if (sWorld.getConfig(CONFIG_CHATLOG_RAID))
-                sLog.out(LOG_CHAT, "[RAID] Leader player %s warns raid with: %s",
+                sLog.outChat("[RAID] Leader player %s warns raid with: %s",
                              GetPlayer()->GetName(), msg.c_str());
         }
         break;
@@ -510,7 +510,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
             group->BroadcastPacket(&data, false);
 
             if (sWorld.getConfig(CONFIG_CHATLOG_BGROUND))
-                sLog.out(LOG_CHAT, "[BATTLEGROUND] Player %s tells battleground with leader %s: %s",
+                sLog.outChat("[BATTLEGROUND] Player %s tells battleground with leader %s: %s",
                              GetPlayer()->GetName(), group->GetLeaderName(), msg.c_str());
         }
         break;
@@ -536,7 +536,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
             group->BroadcastPacket(&data, false);
 
             if (sWorld.getConfig(CONFIG_CHATLOG_BGROUND))
-                sLog.out(LOG_CHAT, "[RAID] Leader player %s tells battleground: %s",
+                sLog.outChat("[RAID] Leader player %s tells battleground: %s",
                              GetPlayer()->GetName(), msg.c_str());
         }
         break;
@@ -563,10 +563,10 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
                          chn->HasFlag(CHANNEL_FLAG_CITY) ||
                          chn->HasFlag(CHANNEL_FLAG_LFG)) &&
                         sWorld.getConfig(CONFIG_CHATLOG_SYSCHAN))
-                        sLog.out(LOG_CHAT, "[SYSCHAN] Player %s tells channel %s: %s",
+                        sLog.outChat("[SYSCHAN] Player %s tells channel %s: %s",
                                      GetPlayer()->GetName(), chn->GetName().c_str(), msg.c_str());
                     else if (sWorld.getConfig(CONFIG_CHATLOG_CHANNEL))
-                        sLog.out(LOG_CHAT, "[CHANNEL] Player %s tells channel %s: %s",
+                        sLog.outChat("[CHANNEL] Player %s tells channel %s: %s",
                                      GetPlayer()->GetName(), chn->GetName().c_str(), msg.c_str());
                 }
             }

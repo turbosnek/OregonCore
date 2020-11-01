@@ -45,7 +45,6 @@ void SmartWaypointMgr::LoadFromDB()
     if (!result)
     {
         sLog.outString(">> Loaded 0 SmartAI Waypoint Paths. DB table `waypoints` is empty.");
-		sLog.outString();
         return;
     }
 
@@ -83,7 +82,6 @@ void SmartWaypointMgr::LoadFromDB()
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u SmartAI waypoint paths (total %u waypoints) in %u ms", count, total, GetMSTimeDiffToNow(oldMSTime));
-	sLog.outString();
 }
 
 SmartWaypointMgr::~SmartWaypointMgr()
@@ -111,7 +109,6 @@ void SmartAIMgr::LoadSmartAIFromDB()
     if (!result)
     {
         sLog.outString(">> Loaded 0 SmartAI scripts. DB table `smartai_scripts` is empty.");
-		sLog.outString();
         return;
     }
 
@@ -286,7 +283,7 @@ void SmartAIMgr::LoadSmartAIFromDB()
     }
 
     sLog.outString(">> Loaded %u SmartAI scripts in %u ms", count, GetMSTimeDiffToNow(oldMSTime));
-	sLog.outString();
+
     UnLoadHelperStores();
 }
 
@@ -1290,7 +1287,6 @@ void SmartAIMgr::LoadHelperStores()
     }
 
     sLog.outString(">> Loaded SmartAIMgr Helpers in %u ms", GetMSTimeDiffToNow(oldMSTime));
-	sLog.outString();
 }
 
 void SmartAIMgr::UnLoadHelperStores()

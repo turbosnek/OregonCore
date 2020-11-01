@@ -119,7 +119,7 @@ public:
         {
             pInst = (ScriptedInstance*)c->GetInstanceData();
             if (!pInst)
-                sLog.outError("OSCR: No Instance eye_of_cthunAI");
+                error_log("OSCR: No Instance eye_of_cthunAI");
         }
 
         ScriptedInstance* pInst;
@@ -503,7 +503,7 @@ public:
         {
             pInst = (ScriptedInstance*)c->GetInstanceData();
             if (!pInst)
-                sLog.outError("OSCR: No Instance eye_of_cthunAI");
+                error_log("OSCR: No Instance eye_of_cthunAI");
         }
 
         ScriptedInstance* pInst;

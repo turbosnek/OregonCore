@@ -20,8 +20,7 @@
 
 #include "Maps/MapTree.h"
 #include "Models/ModelInstance.h"
-#include "Log.h"
-#include "Util.h"
+
 #include "DetourNavMeshBuilder.h"
 #include "DetourCommon.h"
 
