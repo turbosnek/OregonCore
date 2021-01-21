@@ -272,12 +272,11 @@ void AuctionHouseMgr::SendAuctionExpiredMail(AuctionEntry* auction)
 void AuctionHouseMgr::LoadAuctionItems()
 {
     // data needs to be at first place for Item::LoadFromDB
-    QueryResult* result = CharacterDatabase.Query("SELECT itemEntry, creatorGuid, giftCreatorGuid, count, duration, charges, flags, enchantments, randomPropertyId, durability, itemTextId, itemguid, item_template FROM auctionhouse JOIN item_instance ON itemguid = guid");
+    QueryResult_AutoPtr result = CharacterDatabase.Query("SELECT itemEntry, creatorGuid, giftCreatorGuid, count, duration, charges, flags, enchantments, randomPropertyId, durability, itemTextId, itemguid, item_template FROM auctionhouse JOIN item_instance ON itemguid = guid");
 
     if (!result)
     {
         sLog.outString(">> Loaded 0 auction items");
-		sLog.outString();
         return;
     }
 
@@ -314,16 +313,14 @@ void AuctionHouseMgr::LoadAuctionItems()
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u auction items", count);
-	sLog.outString();
 }
 
 void AuctionHouseMgr::LoadAuctions()
 {
-    QueryResult* result = CharacterDatabase.Query("SELECT COUNT(*) FROM auctionhouse");
+    QueryResult_AutoPtr result = CharacterDatabase.Query("SELECT COUNT(*) FROM auctionhouse");
     if (!result)
     {
         sLog.outString(">> Loaded 0 auctions. DB table auctionhouse is empty.");
-		sLog.outString();
         return;
     }
 
@@ -333,7 +330,6 @@ void AuctionHouseMgr::LoadAuctions()
     if (!AuctionCount)
     {
         sLog.outString(">> Loaded 0 auctions. DB table auctionhouse is empty.");
-		sLog.outString();
         return;
     }
 
@@ -341,7 +337,6 @@ void AuctionHouseMgr::LoadAuctions()
     if (!result)
     {
         sLog.outString(">> Loaded 0 auctions. DB table auctionhouse is empty.");
-		sLog.outString();
         return;
     }
 
@@ -410,7 +405,6 @@ void AuctionHouseMgr::LoadAuctions()
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u auctions", AuctionCount);
-	sLog.outString();
 }
 
 void AuctionHouseMgr::AddAItem(Item* it)
@@ -524,7 +518,7 @@ void AuctionHouseObject::Update()
     if (AuctionsMap.empty())
         return;
 
-    QueryResult* result = CharacterDatabase.PQuery("SELECT id FROM auctionhouse WHERE time <= %u ORDER BY TIME ASC", (uint32)curTime + 60);
+    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT id FROM auctionhouse WHERE time <= %u ORDER BY TIME ASC", (uint32)curTime + 60);
 
     if (!result)
         return;

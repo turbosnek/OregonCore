@@ -307,7 +307,7 @@ Corpse* ObjectAccessor::ConvertCorpseForPlayer(uint64 player_guid, bool insignia
     /// but undead woman lies to the front - so we need to gather some info in order
     /// to modify corpseO properly to fit the model.
 
-    sLog.outDebug("Deleting Corpse and spawned bones.");
+    DEBUG_LOG("Deleting Corpse and spawned bones.");
 
     Map* map = corpse->FindMap();
 

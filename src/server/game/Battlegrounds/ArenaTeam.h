@@ -217,8 +217,8 @@ class ArenaTeam
 
         bool IsFighting() const;
 
-        bool LoadArenaTeamFromDB(QueryResult* arenaTeamDataResult);
-        bool LoadMembersFromDB(QueryResult* arenaTeamMembersResult);
+        bool LoadArenaTeamFromDB(QueryResult_AutoPtr arenaTeamDataResult);
+        bool LoadMembersFromDB(QueryResult_AutoPtr arenaTeamMembersResult);
         void LoadStatsFromDB(uint32 ArenaTeamId);
 
         void SaveToDB();

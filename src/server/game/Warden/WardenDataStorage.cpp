@@ -53,14 +53,13 @@ void CWardenDataStorage::LoadWardenDataResult(bool reload)
         InternalDataID = 1;
     }
 
-    QueryResult* result = WorldDatabase.Query("SELECT `check`, `data`, `result`, `address`, `length`, `str`, `id` FROM warden_data_result");
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT `check`, `data`, `result`, `address`, `length`, `str`, `id` FROM warden_data_result");
 
     uint32 count = 0;
 
     if (!result)
     {
         sLog.outString(">> Loaded %u warden data and results", count);
-		sLog.outString();
         return;
     }
 
@@ -129,7 +128,6 @@ void CWardenDataStorage::LoadWardenDataResult(bool reload)
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u warden data and results", count);
-	sLog.outString();
 }
 
 WardenData* CWardenDataStorage::GetWardenDataById(uint32 Id)

@@ -267,7 +267,7 @@ public:
                         }
                         else
                         {
-                            sLog.outError("OSCR: Didn't find Shathrowar. Kalecgos event reseted.");
+                            error_log("OSCR: Didn't find Shathrowar. Kalecgos event reseted.");
                             EnterEvadeMode();
                             return;
                         }

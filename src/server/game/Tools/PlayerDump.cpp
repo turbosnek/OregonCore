@@ -202,7 +202,7 @@ void fixNULLfields(std::string& line)
     }
 }
 
-std::string CreateDumpString(char const* tableName, QueryResult* result)
+std::string CreateDumpString(char const* tableName, QueryResult_AutoPtr result)
 {
     if (!tableName || !result) return "";
     std::ostringstream ss;
@@ -252,7 +252,7 @@ std::string PlayerDumpWriter::GenerateWhereStr(char const* field, GUIDs const& g
     return wherestr.str();
 }
 
-void StoreGUID(QueryResult* result, uint32 field, std::set<uint32>& guids)
+void StoreGUID(QueryResult_AutoPtr result, uint32 field, std::set<uint32>& guids)
 {
     Field* fields = result->Fetch();
     uint32 guid = fields[field].GetUInt32();
@@ -260,7 +260,7 @@ void StoreGUID(QueryResult* result, uint32 field, std::set<uint32>& guids)
         guids.insert(guid);
 }
 
-void StoreGUID(QueryResult* result, uint32 data, uint32 field, std::set<uint32>& guids)
+void StoreGUID(QueryResult_AutoPtr result, uint32 data, uint32 field, std::set<uint32>& guids)
 {
     Field* fields = result->Fetch();
     std::string dataStr = fields[data].GetCppString();
@@ -326,7 +326,7 @@ void PlayerDumpWriter::DumpTable(std::string& dump, uint32 guid, char const* tab
         else                                                // not set case, get single guid string
             wherestr = GenerateWhereStr(fieldname, guid);
 
-        QueryResult* result = CharacterDatabase.PQuery("SELECT * FROM %s WHERE %s", tableFrom, wherestr.c_str());
+        QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT * FROM %s WHERE %s", tableFrom, wherestr.c_str());
         if (!result)
             return;
 
@@ -380,9 +380,9 @@ std::string PlayerDumpWriter::GetDump(uint32 guid)
     return dump;
 }
 
-DumpReturn PlayerDumpWriter::WriteDump(const char* file, uint32 guid)
+DumpReturn PlayerDumpWriter::WriteDump(const std::string& file, uint32 guid)
 {
-    FILE* fout = fopen(file, "w");
+    FILE* fout = fopen(file.c_str(), "w");
     if (!fout)
         return DUMP_FILE_OPEN_ERROR;
 
@@ -396,18 +396,18 @@ DumpReturn PlayerDumpWriter::WriteDump(const char* file, uint32 guid)
 // Reading - High-level functions
 #define ROLLBACK(DR) {CharacterDatabase.RollbackTransaction(); fclose(fin); return (DR);}
 
-DumpReturn PlayerDumpReader::LoadDump(const char* file, uint32 account, std::string name, uint32 guid)
+DumpReturn PlayerDumpReader::LoadDump(const std::string& file, uint32 account, std::string name, uint32 guid)
 {
     // check character count
     uint32 charcount = sAccountMgr->GetCharactersCount(account);
     if (charcount >= 10)
         return DUMP_TOO_MANY_CHARS;
 
-    FILE* fin = fopen(file, "r");
+    FILE* fin = fopen(file.c_str(), "r");
     if (!fin)
         return DUMP_FILE_OPEN_ERROR;
 
-    QueryResult* result = nullptr;
+    QueryResult_AutoPtr result = QueryResult_AutoPtr(NULL);
     char newguid[20], chraccount[20], newpetid[20], currpetid[20], lastpetid[20];
 
     // make sure the same guid doesn't already exist and is safe to use

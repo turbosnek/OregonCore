@@ -36,7 +36,6 @@
 #include "ObjectGuid.h"
 #include "Policies/Singleton.h"
 #include "Database/SQLStorage.h"
-#include "SQLStorages.h"
 #include "Path.h"
 #include "ConditionMgr.h"
 
@@ -45,7 +44,16 @@
 #include <limits>
 #include <tuple>
 
-
+extern SQLStorage sCreatureStorage;
+extern SQLStorage sCreatureDataAddonStorage;
+extern SQLStorage sCreatureInfoAddonStorage;
+extern SQLStorage sCreatureModelStorage;
+extern SQLStorage sEquipmentStorage;
+extern SQLStorage sEquipmentStorageRaw;
+extern SQLStorage sGOStorage;
+extern SQLStorage sPageTextStore;
+extern SQLStorage sItemStorage;
+extern SQLStorage sInstanceTemplate;
 
 class Group;
 class Guild;

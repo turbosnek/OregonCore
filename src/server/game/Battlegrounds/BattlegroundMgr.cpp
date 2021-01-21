@@ -1511,7 +1511,7 @@ void BattlegroundMgr::CreateInitialBattlegrounds()
     uint32 count = 0;
 
     //                                                       0   1                 2                 3      4      5                6              7             8           9
-    QueryResult* result = WorldDatabase.Query("SELECT id, MinPlayersPerTeam,MaxPlayersPerTeam,MinLvl,MaxLvl,AllianceStartLoc,AllianceStartO,HordeStartLoc,HordeStartO,StartMaxDist FROM battleground_template");
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT id, MinPlayersPerTeam,MaxPlayersPerTeam,MinLvl,MaxLvl,AllianceStartLoc,AllianceStartO,HordeStartLoc,HordeStartO,StartMaxDist FROM battleground_template");
 
     if (!result)
     {
@@ -1612,7 +1612,6 @@ void BattlegroundMgr::CreateInitialBattlegrounds()
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u battlegrounds", count);
-	sLog.outString();
 }
 
 void BattlegroundMgr::InitAutomaticArenaPointDistribution()
@@ -1620,7 +1619,7 @@ void BattlegroundMgr::InitAutomaticArenaPointDistribution()
     if (m_AutoDistributePoints)
     {
         sLog.outDebug("Initializing Automatic Arena Point Distribution");
-        QueryResult* result = CharacterDatabase.Query("SELECT NextArenaPointDistributionTime FROM saved_variables");
+        QueryResult_AutoPtr result = CharacterDatabase.Query("SELECT NextArenaPointDistributionTime FROM saved_variables");
         if (!result)
         {
             sLog.outDebug("Battleground: Next arena point distribution time not found in SavedVariables, reseting it now.");

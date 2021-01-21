@@ -425,7 +425,7 @@ void PoolGroup<Quest>::SpawnObject(ActivePoolData& spawns, uint32 limit, uint32 
     // load state from db
     if (!triggerFrom)
     {
-        QueryResult* result = CharacterDatabase.PQuery("SELECT quest_id FROM pool_quest_save WHERE pool_id = %u", poolId);
+        QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT quest_id FROM pool_quest_save WHERE pool_id = %u", poolId);
         if (result)
         {
             do
@@ -531,11 +531,10 @@ PoolMgr::PoolMgr() { }
 
 void PoolMgr::LoadFromDB()
 {
-    QueryResult* result = WorldDatabase.Query("SELECT MAX(entry) FROM pool_template");
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT MAX(entry) FROM pool_template");
     if (!result)
     {
         sLog.outString(">> Loaded 0 object pools. DB table `pool_template` is empty.");
-		sLog.outString();
         return;
     }
     else
@@ -551,7 +550,6 @@ void PoolMgr::LoadFromDB()
     {
         mPoolTemplate.clear();
         sLog.outString(">> Loaded 0 object pools. DB table `pool_template` is empty.");
-		sLog.outString();
         return;
     }
 
@@ -571,7 +569,6 @@ void PoolMgr::LoadFromDB()
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u objects pools", count);
-	sLog.outString();
 
     // Creatures
     mPoolCreatureGroups.resize(max_pool_id + 1);
@@ -580,11 +577,9 @@ void PoolMgr::LoadFromDB()
     result = WorldDatabase.Query("SELECT guid, pool_entry, chance FROM pool_creature");
 
     count = 0;
-	if (!result)
-	{
-		sLog.outString(">> Loaded 0 creatures in  pools. DB table `pool_creature` is empty.");
-		sLog.outString();
-	}
+    if (!result)
+
+        sLog.outString(">> Loaded 0 creatures in  pools. DB table `pool_creature` is empty.");
     else
     {
 
@@ -626,7 +621,6 @@ void PoolMgr::LoadFromDB()
         }
         while (result->NextRow());
         sLog.outString(">> Loaded %u creatures in pools", count);
-		sLog.outString();
     }
 
     // Gameobjects
@@ -636,11 +630,8 @@ void PoolMgr::LoadFromDB()
     result = WorldDatabase.Query("SELECT guid, pool_entry, chance FROM pool_gameobject");
 
     count = 0;
-	if (!result)
-	{
-		sLog.outString(">> Loaded 0 gameobjects in pools. DB table `pool_gameobject` is empty.");
-		sLog.outString();
-	}
+    if (!result)
+        sLog.outString(">> Loaded 0 gameobjects in pools. DB table `pool_gameobject` is empty.");
     else
     {
         do
@@ -689,7 +680,6 @@ void PoolMgr::LoadFromDB()
         }
         while (result->NextRow());
         sLog.outString(">> Loaded %u gameobject in pools", count);
-		sLog.outString();
     }
 
     // Pool of pools
@@ -698,11 +688,8 @@ void PoolMgr::LoadFromDB()
     result = WorldDatabase.Query("SELECT pool_id, mother_pool, chance FROM pool_pool");
 
     count = 0;
-	if (!result)
-	{
-		sLog.outString(">> Loaded 0 pools in pools");
-		sLog.outString();
-	}
+    if (!result)
+        sLog.outString(">> Loaded 0 pools in pools");
     else
     {
         do
@@ -771,13 +758,12 @@ void PoolMgr::LoadFromDB()
         }
 
         sLog.outString(">> Loaded %u pools in mother pools", count);
-		sLog.outString();
     }
 }
 
 void PoolMgr::LoadQuestPools()
 {
-    QueryResult* result = WorldDatabase.Query("SELECT entry, pool_entry FROM pool_quest");
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT entry, pool_entry FROM pool_quest");
 
     mQuestSearchMap.clear();
     mPoolQuestGroups.resize(max_pool_id + 1);
@@ -786,7 +772,6 @@ void PoolMgr::LoadQuestPools()
     if (!result)
     {
         sLog.outString(">> Loaded 0 quests in pools");
-		sLog.outString();
         return;
     }
 
@@ -862,13 +847,12 @@ void PoolMgr::LoadQuestPools()
     } while (result->NextRow());
 
     sLog.outString(">> Loaded %u quests in pools", count);
-	sLog.outString();
 }
 
 // The initialize method will spawn all pools not in an event and not in another pool, this is why there is 2 left joins with 2 null checks
 void PoolMgr::Initialize()
 {
-    QueryResult* result = WorldDatabase.Query("SELECT DISTINCT pool_template.entry, pool_pool.pool_id, pool_pool.mother_pool FROM pool_template LEFT JOIN game_event_pool ON pool_template.entry=game_event_pool.pool_entry LEFT JOIN pool_pool ON pool_template.entry=pool_pool.pool_id WHERE game_event_pool.pool_entry IS NULL");
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT DISTINCT pool_template.entry, pool_pool.pool_id, pool_pool.mother_pool FROM pool_template LEFT JOIN game_event_pool ON pool_template.entry=game_event_pool.pool_entry LEFT JOIN pool_pool ON pool_template.entry=pool_pool.pool_id WHERE game_event_pool.pool_entry IS NULL");
     uint32 count = 0;
     if (result)
     {

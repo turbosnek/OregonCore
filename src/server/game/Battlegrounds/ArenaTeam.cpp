@@ -83,7 +83,7 @@ bool ArenaTeam::Create(uint64 captainGuid, uint32 type, std::string arenaTeamNam
     CharacterDatabase.CommitTransaction();
 
     AddMember(m_CaptainGuid);
-    DEBUG_LOG("New ArenaTeam created [Id: %u] [Type: %u] [Captain GUID: " UI64FMTD "]", GetId(), GetType(), GetCaptain());
+    sLog.outArena("New ArenaTeam created [Id: %u] [Type: %u] [Captain GUID: " UI64FMTD "]", GetId(), GetType(), GetCaptain());
     return true;
 }
 
@@ -111,7 +111,7 @@ bool ArenaTeam::AddMember(const uint64& playerGuid)
     else
     {
         //                                                            0     1
-        QueryResult* result = CharacterDatabase.PQuery("SELECT name, class FROM characters WHERE guid='%u'", GUID_LOPART(playerGuid));
+        QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT name, class FROM characters WHERE guid='%u'", GUID_LOPART(playerGuid));
         if (!result)
             return false;
 
@@ -152,12 +152,12 @@ bool ArenaTeam::AddMember(const uint64& playerGuid)
         // hide promote/remove buttons
         if (m_CaptainGuid != playerGuid)
             pl->SetArenaTeamInfoField(GetSlot(), ARENA_TEAM_MEMBER, 1);
-        DEBUG_LOG("Player: %s [GUID: %u] joined arena team type: %u [Id: %u].", pl->GetName(), pl->GetGUIDLow(), GetType(), GetId());
+        sLog.outArena("Player: %s [GUID: %u] joined arena team type: %u [Id: %u].", pl->GetName(), pl->GetGUIDLow(), GetType(), GetId());
     }
     return true;
 }
 
-bool ArenaTeam::LoadArenaTeamFromDB(QueryResult* arenaTeamDataResult)
+bool ArenaTeam::LoadArenaTeamFromDB(QueryResult_AutoPtr arenaTeamDataResult)
 {
     if (!arenaTeamDataResult)
         return false;
@@ -184,7 +184,7 @@ bool ArenaTeam::LoadArenaTeamFromDB(QueryResult* arenaTeamDataResult)
     return true;
 }
 
-bool ArenaTeam::LoadMembersFromDB(QueryResult* arenaTeamMembersResult)
+bool ArenaTeam::LoadMembersFromDB(QueryResult_AutoPtr arenaTeamMembersResult)
 {
     if (!arenaTeamMembersResult)
         return false;
@@ -262,7 +262,7 @@ void ArenaTeam::SetCaptain(const uint64& guid)
     if (Player* newcaptain = sObjectMgr.GetPlayer(guid))
     {
         newcaptain->SetArenaTeamInfoField(GetSlot(), ARENA_TEAM_MEMBER, 0);
-        DEBUG_LOG("Player: %s [GUID: %u] promoted player: %s [GUID: %u] to leader of arena team [Id: %u] [Type: %u].", oldcaptain->GetName(), oldcaptain->GetGUIDLow(), newcaptain->GetName(), newcaptain->GetGUIDLow(), GetId(), GetType());
+        sLog.outArena("Player: %s [GUID: %u] promoted player: %s [GUID: %u] to leader of arena team [Id: %u] [Type: %u].", oldcaptain->GetName(), oldcaptain->GetGUIDLow(), newcaptain->GetName(), newcaptain->GetGUIDLow(), GetId(), GetType());
     }
 }
 
@@ -298,7 +298,7 @@ void ArenaTeam::DelMember(uint64 guid)
         // delete all info regarding this team
         for (uint32 i = 0; i < ARENA_TEAM_END; ++i)
             player->SetArenaTeamInfoField(GetSlot(), ArenaTeamInfoType(i), 0);
-        DEBUG_LOG("Player: %s [GUID: %u] left arena team type: %u [Id: %u].", player->GetName(), player->GetGUIDLow(), GetType(), GetId());
+        sLog.outArena("Player: %s [GUID: %u] left arena team type: %u [Id: %u].", player->GetName(), player->GetGUIDLow(), GetType(), GetId());
     }
 
     CharacterDatabase.PExecute("DELETE FROM arena_team_member WHERE arenateamid = '%u' AND guid = '%u'", GetId(), GUID_LOPART(guid));
@@ -316,7 +316,7 @@ void ArenaTeam::Disband(WorldSession* session)
 
     if (session)
         if (Player* player = session->GetPlayer())
-            DEBUG_LOG("Player: %s [GUID: %u] disbanded arena team type: %u [Id: %u].", player->GetName(), player->GetGUIDLow(), GetType(), GetId());
+            sLog.outArena("Player: %s [GUID: %u] disbanded arena team type: %u [Id: %u].", player->GetName(), player->GetGUIDLow(), GetType(), GetId());
 
     CharacterDatabase.BeginTransaction();
     CharacterDatabase.PExecute("DELETE FROM arena_team WHERE arenateamid = '%u'", m_TeamId);
@@ -353,7 +353,7 @@ void ArenaTeam::Roster(WorldSession* session)
     }
 
     session->SendPacket(&data);
-    sLog.outDebug("WORLD: Sent SMSG_ARENA_TEAM_ROSTER");
+    DEBUG_LOG("WORLD: Sent SMSG_ARENA_TEAM_ROSTER");
 }
 
 void ArenaTeam::Query(WorldSession* session)
@@ -368,7 +368,7 @@ void ArenaTeam::Query(WorldSession* session)
     data << uint32(m_BorderStyle);                          // border style
     data << uint32(m_BorderColor);                          // border color
     session->SendPacket(&data);
-    sLog.outDebug("WORLD: Sent SMSG_ARENA_TEAM_QUERY_RESPONSE");
+    DEBUG_LOG("WORLD: Sent SMSG_ARENA_TEAM_QUERY_RESPONSE");
 }
 
 void ArenaTeam::Stats(WorldSession* session)
@@ -496,7 +496,7 @@ void ArenaTeam::BroadcastEvent(ArenaTeamEvents event, uint64 guid, char const* s
 
     BroadcastPacket(&data);
 
-    sLog.outDebug("WORLD: Sent SMSG_ARENA_TEAM_EVENT");
+    DEBUG_LOG("WORLD: Sent SMSG_ARENA_TEAM_EVENT");
 }
 
 uint8 ArenaTeam::GetSlotByType(uint32 type)

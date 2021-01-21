@@ -138,7 +138,7 @@ public:
                 }
             }
     
-            sLog.outDebug("OSCR: Instance Shadow Labyrinth: GetPlayerInMap, but PlayerList is empty!");
+            debug_log("OSCR: Instance Shadow Labyrinth: GetPlayerInMap, but PlayerList is empty!");
             return NULL;
         }
     

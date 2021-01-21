@@ -40,12 +40,11 @@ void SmartWaypointMgr::LoadFromDB()
 
     waypoint_map.clear();
 
-    QueryResult* result = WorldDatabase.Query("SELECT entry, pointid, position_x, position_y, position_z FROM waypoints ORDER BY entry, pointid");
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT entry, pointid, position_x, position_y, position_z FROM waypoints ORDER BY entry, pointid");
 
     if (!result)
     {
         sLog.outString(">> Loaded 0 SmartAI Waypoint Paths. DB table `waypoints` is empty.");
-		sLog.outString();
         return;
     }
 
@@ -83,7 +82,6 @@ void SmartWaypointMgr::LoadFromDB()
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u SmartAI waypoint paths (total %u waypoints) in %u ms", count, total, GetMSTimeDiffToNow(oldMSTime));
-	sLog.outString();
 }
 
 SmartWaypointMgr::~SmartWaypointMgr()
@@ -106,12 +104,11 @@ void SmartAIMgr::LoadSmartAIFromDB()
     for (uint8 i = 0; i < SMART_SCRIPT_TYPE_MAX; i++)
         mEventMap[i].clear();  //Drop Existing SmartAI List
 
-    QueryResult* result = WorldDatabase.Query("SELECT entryorguid, source_type, id, link, event_type, event_phase_mask, event_chance, event_flags, event_param1, event_param2, event_param3, event_param4, event_param5, action_type, action_param1, action_param2, action_param3, action_param4, action_param5, action_param6, target_type, target_param1, target_param2, target_param3, target_x, target_y, target_z, target_o FROM smart_scripts ORDER BY entryorguid, source_type, id, link");
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT entryorguid, source_type, id, link, event_type, event_phase_mask, event_chance, event_flags, event_param1, event_param2, event_param3, event_param4, event_param5, action_type, action_param1, action_param2, action_param3, action_param4, action_param5, action_param6, target_type, target_param1, target_param2, target_param3, target_x, target_y, target_z, target_o FROM smart_scripts ORDER BY entryorguid, source_type, id, link");
 
     if (!result)
     {
         sLog.outString(">> Loaded 0 SmartAI scripts. DB table `smartai_scripts` is empty.");
-		sLog.outString();
         return;
     }
 
@@ -286,7 +283,7 @@ void SmartAIMgr::LoadSmartAIFromDB()
     }
 
     sLog.outString(">> Loaded %u SmartAI scripts in %u ms", count, GetMSTimeDiffToNow(oldMSTime));
-	sLog.outString();
+
     UnLoadHelperStores();
 }
 
@@ -1290,7 +1287,6 @@ void SmartAIMgr::LoadHelperStores()
     }
 
     sLog.outString(">> Loaded SmartAIMgr Helpers in %u ms", GetMSTimeDiffToNow(oldMSTime));
-	sLog.outString();
 }
 
 void SmartAIMgr::UnLoadHelperStores()

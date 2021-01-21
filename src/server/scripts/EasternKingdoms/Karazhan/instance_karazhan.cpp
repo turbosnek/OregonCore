@@ -456,7 +456,7 @@ public:
                 m_auiEncounter[10] >> m_auiEncounter[11];
             if (dataHead1 != 'K' || dataHead2 != 'Z')
             {
-                sLog.outError("SD2: Karazhan corrupted save uiData.");
+                error_log("SD2: Karazhan corrupted save uiData.");
                 for (int i = 0; i < MAX_ENCOUNTER; i++)
                     m_auiEncounter[i] = 0;
             }

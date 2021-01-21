@@ -49,7 +49,7 @@ void LoadSkillDiscoveryTable()
     uint32 count = 0;
 
     //                                                       0        1         2
-    QueryResult* result = WorldDatabase.Query("SELECT spellId, reqSpell, chance FROM skill_discovery_template");
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT spellId, reqSpell, chance FROM skill_discovery_template");
 
     if (result)
     {
@@ -111,15 +111,11 @@ void LoadSkillDiscoveryTable()
         while (result->NextRow());
 
         sLog.outString(">> Loaded %u skill discovery definitions", count);
-		sLog.outString();
         if (!ssNonDiscoverableEntries.str().empty())
             sLog.outErrorDb("Some items can't be successfully discovered: has chance field value < 0.000001 in skill_discovery_template DB table . List:\n%s", ssNonDiscoverableEntries.str().c_str());
     }
-	else
-	{
-		sLog.outString(">> Loaded 0 skill discovery definitions. DB table skill_discovery_template is empty.");
-		sLog.outString();
-	}
+    else
+        sLog.outString(">> Loaded 0 skill discovery definitions. DB table skill_discovery_template is empty.");
 }
 
 uint32 GetSkillDiscoverySpell(uint32 skillId, uint32 spellId, Player* player)

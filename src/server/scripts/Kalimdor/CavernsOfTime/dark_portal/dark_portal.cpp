@@ -322,7 +322,7 @@ public:
                 mRiftWaveCount = 0;
 
             entry = PortalWaves[mWaveId].PortalMob[mRiftWaveCount];
-            sLog.outDebug("OSCR: npc_time_rift: summoning wave creature (Wave %u, Entry %u).", mRiftWaveCount, entry);
+            debug_log("OSCR: npc_time_rift: summoning wave creature (Wave %u, Entry %u).", mRiftWaveCount, entry);
 
             ++mRiftWaveCount;
 
@@ -349,7 +349,7 @@ public:
             if (me->IsNonMeleeSpellCast(false))
                 return;
 
-            sLog.outDebug("OSCR: npc_time_rift: not casting anylonger, i need to die.");
+            debug_log("OSCR: npc_time_rift: not casting anylonger, i need to die.");
             me->setDeathState(JUST_DIED);
 
             pInstance->SetData(TYPE_RIFT, SPECIAL);

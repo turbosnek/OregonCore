@@ -19,7 +19,7 @@
 #include "Models/ModelInstance.h"
 #include "Management/VMapManager2.h"
 #include "VMapDefinitions.h"
-#include "ObjectLifeTime.h"
+
 #include <string>
 #include <sstream>
 #include <iomanip>
@@ -60,7 +60,7 @@ class AreaInfoCallback
         void operator()(const Vector3& point, uint32 entry)
         {
             #ifdef VMAP_DEBUG
-                sLog.outDebug("AreaInfoCallback: trying to intersect '%s'", prims[entry].name.c_str());
+                DEBUG_LOG("AreaInfoCallback: trying to intersect '%s'", prims[entry].name.c_str());
             #endif
             prims[entry].intersectPoint(point, aInfo);
         }
@@ -76,7 +76,7 @@ class LocationInfoCallback
         void operator()(const Vector3& point, uint32 entry)
         {
             #ifdef VMAP_DEBUG
-                sLog.outDebug("LocationInfoCallback: trying to intersect '%s'", prims[entry].name.c_str());
+                DEBUG_LOG("LocationInfoCallback: trying to intersect '%s'", prims[entry].name.c_str());
             #endif
             if (prims[entry].GetLocationInfo(point, locInfo))
                 result = true;
@@ -271,7 +271,7 @@ bool StaticMapTree::CanLoadMap(const std::string& vmapPath, uint32 mapID, uint32
 
 bool StaticMapTree::InitMap(const std::string& fname, VMapManager2* vm)
 {
-    //sLog.outDebug("StaticMapTree::InitMap() : initializing StaticMapTree '%s'", fname.c_str());
+    DEBUG_LOG("StaticMapTree::InitMap() : initializing StaticMapTree '%s'", fname.c_str());
     bool success = true;
     std::string fullname = iBasePath + fname;
     FILE* rf = fopen(fullname.c_str(), "rb");
@@ -299,12 +299,12 @@ bool StaticMapTree::InitMap(const std::string& fname, VMapManager2* vm)
         // only non-tiled maps have them, and if so exactly one (so far at least...)
         ModelSpawn spawn;
         #ifdef VMAP_DEBUG
-            sLog.outDebug("StaticMapTree::InitMap() : map isTiled: %u", static_cast<uint32>(iIsTiled));
+            DEBUG_LOG("StaticMapTree::InitMap() : map isTiled: %u", static_cast<uint32>(iIsTiled));
         #endif
         if (!iIsTiled && ModelSpawn::readFromFile(rf, spawn))
         {
             WorldModel* model = vm->acquireModelInstance(iBasePath, spawn.name);
-            //sLog.outDebug("StaticMapTree::InitMap(): loading %s", spawn.name.c_str());
+            DEBUG_LOG("StaticMapTree::InitMap(): loading %s", spawn.name.c_str());
             if (model)
             {
                 // assume that global model always is the first and only tree value (could be improved...)
@@ -314,7 +314,7 @@ bool StaticMapTree::InitMap(const std::string& fname, VMapManager2* vm)
             else
             {
                 success = false;
-                //sLog.outError("StaticMapTree::InitMap() : could not acquire WorldModel pointer for '%s'", spawn.name.c_str());
+                ERROR_LOG("StaticMapTree::InitMap() : could not acquire WorldModel pointer for '%s'", spawn.name.c_str());
             }
         }
 
@@ -350,7 +350,7 @@ bool StaticMapTree::LoadMapTile(uint32 tileX, uint32 tileY, VMapManager2* vm)
     }
     if (!iTreeValues)
     {
-        //sLog.outError("StaticMapTree::LoadMapTile() : tree has not been initialized [%u, %u]", tileX, tileY);
+        ERROR_LOG("StaticMapTree::LoadMapTile() : tree has not been initialized [%u, %u]", tileX, tileY);
         return false;
     }
     bool result = true;
@@ -375,8 +375,8 @@ bool StaticMapTree::LoadMapTile(uint32 tileX, uint32 tileY, VMapManager2* vm)
             {
                 // acquire model instance
                 WorldModel* model = vm->acquireModelInstance(iBasePath, spawn.name);
-                //if (!model)
-                //        sLog.outError("StaticMapTree::LoadMapTile() : could not acquire WorldModel pointer [%u, %u]", tileX, tileY);
+                if (!model)
+                        ERROR_LOG("StaticMapTree::LoadMapTile() : could not acquire WorldModel pointer [%u, %u]", tileX, tileY);
 
                 // update tree
                 uint32 referencedVal;
@@ -387,7 +387,7 @@ bool StaticMapTree::LoadMapTile(uint32 tileX, uint32 tileY, VMapManager2* vm)
                     {
                         if (referencedVal > iNTreeValues)
                         {
-                            //sLog.outError("StaticMapTree::LoadMapTile() : invalid tree element (%u/%u) referenced in tile %s", referencedVal, iNTreeValues, tilefile.c_str());
+                            ERROR_LOG("StaticMapTree::LoadMapTile() : invalid tree element (%u/%u) referenced in tile %s", referencedVal, iNTreeValues, tilefile.c_str());
                             continue;
                         }
                         iTreeValues[referencedVal] = ModelInstance(spawn, model);
@@ -398,9 +398,9 @@ bool StaticMapTree::LoadMapTile(uint32 tileX, uint32 tileY, VMapManager2* vm)
                         ++iLoadedSpawns[referencedVal];
                         #ifdef VMAP_DEBUG
                         if (iTreeValues[referencedVal].ID != spawn.ID)
-                            sLog.outDebug("StaticMapTree::LoadMapTile() : trying to load wrong spawn in node");
+                            DEBUG_LOG("StaticMapTree::LoadMapTile() : trying to load wrong spawn in node");
                         else if (iTreeValues[referencedVal].name != spawn.name)
-                            sLog.outDebug("StaticMapTree::LoadMapTile() : name collision on GUID=%u", spawn.ID);
+                            DEBUG_LOG("StaticMapTree::LoadMapTile() : name collision on GUID=%u", spawn.ID);
                         #endif
                     }
                 }
@@ -425,7 +425,7 @@ void StaticMapTree::UnloadMapTile(uint32 tileX, uint32 tileY, VMapManager2* vm)
     loadedTileMap::iterator tile = iLoadedTiles.find(tileID);
     if (tile == iLoadedTiles.end())
     {
-        //sLog.outError("StaticMapTree::UnloadMapTile() : trying to unload non-loaded tile - Map:%u X:%u Y:%u", iMapID, tileX, tileY);
+        ERROR_LOG("StaticMapTree::UnloadMapTile() : trying to unload non-loaded tile - Map:%u X:%u Y:%u", iMapID, tileX, tileY);
         return;
     }
     if (tile->second) // file associated with tile
@@ -459,9 +459,7 @@ void StaticMapTree::UnloadMapTile(uint32 tileX, uint32 tileY, VMapManager2* vm)
                     else
                     {
                         if (!iLoadedSpawns.count(referencedNode))
-                        {
-                           // sLog.outError("StaticMapTree::UnloadMapTile() : trying to unload non-referenced model '%s' (ID:%u)", spawn.name.c_str(), spawn.ID)
-                        }
+                            ERROR_LOG("StaticMapTree::UnloadMapTile() : trying to unload non-referenced model '%s' (ID:%u)", spawn.name.c_str(), spawn.ID);
                         else if (--iLoadedSpawns[referencedNode] == 0)
                         {
                         iTreeValues[referencedNode].setUnloaded();

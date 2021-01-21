@@ -15,6 +15,7 @@
 * with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "Console.h"
 #include "DBCStores.h"
 #include "M2Structure.h"
 #include "M2Stores.h"
@@ -191,7 +192,7 @@ void LoadM2Cameras(std::string const& dataPath)
             // Reject if not at least the size of the header
             if (static_cast<uint32 const>(fileSize) < sizeof(M2Header))
             {
-                sLog.outError("Camera file %s is damaged. File is smaller than header size", filename.c_str());
+                error_log("Camera file %s is damaged. File is smaller than header size", filename.c_str());
                 m2file.close();
                 continue;
             }
@@ -205,7 +206,7 @@ void LoadM2Cameras(std::string const& dataPath)
             // Check file has correct magic (MD20)
             if (strcmp(fileCheck, "MD20"))
             {
-                sLog.outError("Camera file %s is damaged. File identifier not found", filename.c_str());
+                error_log("Camera file %s is damaged. File identifier not found", filename.c_str());
                 m2file.close();
                 continue;
             }
@@ -225,14 +226,14 @@ void LoadM2Cameras(std::string const& dataPath)
 
             if (header->ofsCameras + sizeof(M2Camera) > static_cast<uint32 const>(fileSize))
             {
-                sLog.outError("server.loading", "Camera file %s is damaged. Camera references position beyond file end (header)", filename.c_str());
+                error_log("server.loading", "Camera file %s is damaged. Camera references position beyond file end (header)", filename.c_str());
                 continue;
             }
 
             // Get camera(s) - Main header, then dump them.
             M2Camera const* cam = reinterpret_cast<M2Camera const*>(buffer.data() + header->ofsCameras);
             if (!readCamera(cam, fileSize, header, dbcentry))
-                sLog.outError("Camera file %s is damaged. Camera references position beyond file end (camera)", filename.c_str());
+                error_log("Camera file %s is damaged. Camera references position beyond file end (camera)", filename.c_str());
         }
     }
 }

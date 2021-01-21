@@ -243,7 +243,7 @@ public:
             ss >> endMagic;
     
             if (startMagic != ZA_MAGIC || endMagic != ZA_MAGIC)
-                sLog.outError("OSCR: Zul'Aman: corrupted save data.");
+                error_log("OSCR: Zul'Aman: corrupted save data.");
         }
     
         void SetData(uint32 type, uint32 data)

@@ -177,7 +177,7 @@ public:
                         MarkedTargetGUID = pMarkedTarget->GetGUID();
                     }
                     else
-                        sLog.outError("OSCR: boss_arlokk could not acquire pMarkedTarget.");
+                        error_log("OSCR: boss_arlokk could not acquire pMarkedTarget.");
 
                     m_uiMark_Timer = 15000;
                 }

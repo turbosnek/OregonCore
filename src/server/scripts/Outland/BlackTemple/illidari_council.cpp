@@ -154,7 +154,7 @@ public:
                 Council[2] = pInstance->GetData64(DATA_LADYMALANDE);
                 Council[3] = pInstance->GetData64(DATA_HIGHNETHERMANCERZEREVOR);
             }
-            else sLog.outError(ERROR_INST_DATA);
+            else error_log(ERROR_INST_DATA);
         }
 
         void EnterCombat(Unit* /*who*/) {}
@@ -407,7 +407,7 @@ struct boss_illidari_councilAI : public ScriptedAI
         }
         else
         {
-			sLog.outError(ERROR_INST_DATA);
+            error_log(ERROR_INST_DATA);
             EnterEvadeMode();
             return;
         }
@@ -471,7 +471,7 @@ struct boss_illidari_councilAI : public ScriptedAI
     {
         if (!pInstance)
         {
-			sLog.outError(ERROR_INST_DATA);
+            error_log(ERROR_INST_DATA);
             return;
         }
 

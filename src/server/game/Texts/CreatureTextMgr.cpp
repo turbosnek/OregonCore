@@ -80,12 +80,11 @@ void CreatureTextMgr::LoadCreatureTexts()
     mTextMap.clear(); // for reload case
     //all currently used temp texts are NOT reset
                                                       
-    QueryResult* result = WorldDatabase.Query("SELECT CreatureID, GroupID, ID, Text, Type, Language, Probability, Emote, Duration, Sound, TextRange FROM creature_text");
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT CreatureID, GroupID, ID, Text, Type, Language, Probability, Emote, Duration, Sound, TextRange FROM creature_text");
 
     if (!result)
     {
         sLog.outString(">> Loaded 0 ceature texts. DB table `creature_text` is empty.");
-		sLog.outString();
 
         return;
     }
@@ -153,7 +152,6 @@ void CreatureTextMgr::LoadCreatureTexts()
     while (result->NextRow());
 
     sLog.outString(">> Loaded %u creature texts for %lu creatures in %u ms", textCount, mTextMap.size(), GetMSTimeDiffToNow(oldMSTime));
-	sLog.outString();
 }
 
 void CreatureTextMgr::LoadCreatureTextLocales()
@@ -162,7 +160,7 @@ void CreatureTextMgr::LoadCreatureTextLocales()
 
     mLocaleTextMap.clear(); // for reload case
 
-    QueryResult* result = WorldDatabase.Query("SELECT CreatureID, GroupID, ID, Locale, Text FROM creature_text_locale");
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT CreatureID, GroupID, ID, Locale, Text FROM creature_text_locale");
 
     if (!result)
         return;
@@ -185,7 +183,6 @@ void CreatureTextMgr::LoadCreatureTextLocales()
     } while (result->NextRow());
 
     sLog.outString(">> Loaded %u creature localized texts in %u ms", int32(mLocaleTextMap.size()), GetMSTimeDiffToNow(oldMSTime));
-	sLog.outString();
 
 }
 

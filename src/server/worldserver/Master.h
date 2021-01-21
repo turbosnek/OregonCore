@@ -30,9 +30,7 @@ class Master
         ~Master();
         int Run(bool runTests);
         static volatile uint32 m_masterLoopCounter;
-        static volatile bool    m_handleSigvSignals;
-        static void SigvSignalHandler();
-        static void ArmAnticrash();
+
         bool RunRegressionTests();
     private:
         void _StartDB();

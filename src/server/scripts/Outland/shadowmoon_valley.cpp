@@ -1381,7 +1381,7 @@ public:
             nodes.resize(2);
             nodes[0] = 161;                                     // From Karynaku
             nodes[1] = 162;                                     // To Mordenai
-            sLog.outError("OSCR: Player %s started quest 10870 which has disabled taxi node, need to be fixed in core", player->GetName());
+            error_log("OSCR: Player %s started quest 10870 which has disabled taxi node, need to be fixed in core", player->GetName());
             //player->ActivateTaxiPathTo(nodes, 20811);
         }
     
@@ -1937,7 +1937,7 @@ public:
                 }
                 CAST_CRE(CoilskarAssassin)->AI()->AttackStart(me);
             }
-            else sLog.outError("OSCR ERROR: Coilskar Assassin couldn't be summmoned");
+            else error_log("OSCR ERROR: Coilskar Assassin couldn't be summmoned");
         }
     
         void JustDied(Unit* /*killer*/)
@@ -4668,7 +4668,7 @@ void AddSC_shadowmoon_valley()
     new npc_shadowcouncil_warlock();
     new npc_plexi();
     new npc_nakansi();
-    new npc_zuluhed_the_whacked();//stuck
+    new npc_zuluhed_the_whacked();
     new npc_dragonmaw_archer();
     new npc_shadowmoon_ancient_spirit();
     new npc_karsius_the_ancient_watcher();
